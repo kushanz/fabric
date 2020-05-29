@@ -1,6 +1,6 @@
 // Import stylesheets
 import './style.css';
-
+import {fabric} from 'fabric';
 var canvas = new fabric.Canvas('mycanvas');
 
 var rect = new fabric.Rect({
