@@ -1,0 +1,8 @@
+{
+  "name": "js-b9w9ri",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "fabric": "^3.6.3"
+  }
+}
