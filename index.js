@@ -22,30 +22,30 @@ var rect = new fabric.Rect({
         })
 
 // ad doc image
-var imgDoc = document.getElementById('imgdoc');
-var docInstance = new fabric.Image(imgDoc, {
-  left: 0,
-  top: 0,
-  angle: 0,
-  opacity: 0.75,
-  width:450,
-  height:500,
-  // hasControls:false,
-  // lockMovementX: false,
-  // lockMovementY:false
-})
-docInstance.lockMovementX = false
+// var imgDoc = document.getElementById('imgdoc');
+// var docInstance = new fabric.Image(imgDoc, {
+//   left: 0,
+//   top: 0,
+//   angle: 0,
+//   opacity: 0.75,
+//   width:450,
+//   height:500,
+//   // hasControls:false,
+//   // lockMovementX: false,
+//   // lockMovementY:false
+// })
+// docInstance.lockMovementX = false
 
  canvas.centerObject(rect);
-        canvas.add(docInstance);
+        // canvas.add(docInstance);
         canvas.add(rect);
-        canvas.item(1).set({
-    borderColor: 'red',
-    cornerColor: 'green',
-    cornerSize: 10,
-    transparentCorners: false
-  });
-  canvas.item(0).selectable = false;
+  //       canvas.item(1).set({
+  //   borderColor: 'red',
+  //   cornerColor: 'green',
+  //   cornerSize: 10,
+  //   transparentCorners: false
+  // });
+  // canvas.item(0).selectable = false;
 canvas.bringForward(rect)
 
 
@@ -74,62 +74,52 @@ canvas.on('mouse:wheel', function(opt) {
   var zoom = canvas.getZoom();
   zoom *= 0.999 ** delta;
   if (zoom > 20) zoom = 20;
-  if (zoom < 0.01) zoom = 0.01;
+  // if (zoom < 0.01) zoom = 0.01;
+  if (zoom < 1) {
+    zoom = 1;
+    canvas.setZoom(1)
+    canvas.setViewportTransform([1,0,0,1,0,0]); 
+  }
   canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
   opt.e.preventDefault();
   opt.e.stopPropagation();
+
 });
 
-// button event zoom
-// canvas.on('object:moving', function(e) {
-//   var obj;
-//   obj = e.target;
-//   obj.setCoords();
-//   var boundingRect = obj.getBoundingRect();
-//   var zoom = canvas.getZoom();
-//   var viewportMatrix = canvas.viewportTransform;
 
-//   //there is a bug in fabric that causes bounding rects to not be transformed by viewport matrix
-//   //this code should compensate for the bug for now
-//   boundingRect.top = (boundingRect.top - viewportMatrix[5]) / zoom;
-//   boundingRect.left = (boundingRect.left - viewportMatrix[4]) / zoom;
-//   boundingRect.width /= zoom;
-//   boundingRect.height /= zoom;
-//   // if object is too big ignore
-//   if (obj.currentHeight * zoom > obj.canvas.height * zoom || obj.currentWidth * zoom > obj.canvas.width * zoom) {
-//     return;
-//   }  
-//   var canvasHeight = obj.canvas.height / zoom,
-//     canvasWidth = obj.canvas.width / zoom,
-//     rTop = boundingRect.top + boundingRect.height,
-//     rLeft = boundingRect.left + boundingRect.width;
-//   // top-left  corner
-//   if (rTop < canvasHeight || rLeft < canvasWidth) {
-//     obj.top = Math.max(obj.top, canvasHeight - boundingRect.height);
-//     obj.left = Math.max(obj.left, canvasWidth - boundingRect.width);
-//   }
-//   // bot-right corner
-//   if (boundingRect.top + boundingRect.height > obj.canvas.height || boundingRect.left + boundingRect.width > obj.canvas.width) {
-//     obj.top = Math.min(obj.top, obj.canvas.height - boundingRect.height + obj.top - boundingRect.top);
-//     obj.left = Math.min(obj.left, obj.canvas.width - boundingRect.width + obj.left - boundingRect.left);
-//   }
-//   //canvas.sendToBack(canvas.getObjects()[0])
+// reset zoom
+function resetZoom() {
+  // canvas.setZoom(1);
+  // canvas.setDimensions({
+  //   width: 450,
+  //   height: 500
+  // });
+  canvas.setViewportTransform([1,0,0,1,0,0]); 
+  // canvas.renderAll()
+}
 
+$('#resetzoom').click(function() {
+  resetZoom()
+})
 
+// zoom in
+$('#zoomin').click(function() {
+  if (canvas.getZoom() < 3) {
+    // canvas.setZoom(canvas.getZoom() + 0.1);
+    console.log(canvas.getZoom())
+    // let initzoom = canvas.getZoom();
+    // canvas.zoomToPoint({ x: 'center', y: 'center' },initzoom+1 );
+    canvas.zoomToPoint(new fabric.Point(canvas.width / 2, canvas.height / 2), canvas.getZoom() / 0.9);
+  }
+});
 
+// zoom out
+$('#zoomout').click(function() {
+  console.log(canvas.getZoom())
+  if (canvas.getZoom() < 1.1) {
+    canvas.setViewportTransform([1,0,0,1,0,0]); 
+  } else {
+    canvas.zoomToPoint(new fabric.Point(canvas.width / 2, canvas.height / 2), canvas.getZoom() / 1.1);
+  };
 
-
-// })
-
-// $('#zoomin').click(function() {
-//   if (canvas.getZoom() < 3) {
-//     canvas.setZoom(canvas.getZoom() + 0.1);
-//   }
-// });
-
-// $('#zoomout').click(function() {
-//   if (canvas.getZoom() != 1) {
-//     canvas.setZoom(canvas.getZoom() - 0.1)
-//   };
-
-// });
+});
